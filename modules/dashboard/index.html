@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Servidor de Casa</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #f4f4f5; --card: #fff; --fg: #18181b; --muted: #71717a;
+            --line: #e4e4e7; --ok: #16a34a; --bad: #dc2626; --warn: #d97706; --bar: #2563eb; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #18181b; --card: #27272a; --fg: #fafafa; --muted: #a1a1aa; --line: #3f3f46; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.45 system-ui, sans-serif; }
+    main { width: min(880px, 100%); margin: 0 auto; padding: 32px 16px 48px; }
+    h1 { margin: 0 0 24px; font-size: 30px; font-weight: 650; text-align: center; }
+    h2 { margin: 0 0 12px; font-size: 17px; font-weight: 600; color: var(--muted); }
+    section { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px;
+              box-shadow: 0 1px 3px rgb(0 0 0 / .1); }
+
+    .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px;
+            background: none; box-shadow: none; padding: 0; }
+    .app { position: relative; display: block; background: var(--card); color: inherit; text-decoration: none;
+           border-radius: 16px; padding: 28px 16px 22px; text-align: center; box-shadow: 0 1px 3px rgb(0 0 0 / .1);
+           transition: transform .1s; }
+    .app:hover { transform: translateY(-2px); }
+    .app .icon { font-size: 40px; line-height: 1; }
+    .app .name { font-size: 22px; font-weight: 650; margin-top: 10px; }
+    .app .desc { color: var(--muted); font-size: 15px; margin-top: 2px; }
+    .app .dot { position: absolute; top: 14px; right: 14px; }
+
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+    .dot.up { background: var(--ok); }
+    .dot.down { background: var(--bad); }
+
+    .bar { height: 14px; background: var(--line); border-radius: 7px; overflow: hidden; }
+    .bar > div { height: 100%; width: 0; background: var(--bar); transition: width .4s; }
+    .bar.warn > div { background: var(--warn); }
+    .bar.full > div { background: var(--bad); }
+    .storage-text { display: flex; justify-content: space-between; margin-top: 8px; font-size: 15px; color: var(--muted); }
+    .storage-text b { color: var(--fg); }
+
+    ol { margin: 0; padding-left: 22px; }
+    li { margin: 4px 0; }
+    .help p { margin: 12px 0 0; color: var(--muted); font-size: 15px; }
+
+    .admin { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; }
+    .admin a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .admin a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Servidor de Casa</h1>
+
+  <section class="apps">
+    <a class="app" data-port="8096" data-status="jellyfin">
+      <span class="dot"></span><div class="icon">&#9654;&#65039;</div>
+      <div class="name">Ver</div><div class="desc">Películas y series</div>
+    </a>
+    <a class="app" data-port="5055" data-status="jellyseerr">
+      <span class="dot"></span><div class="icon">&#128269;</div>
+      <div class="name">Pedir</div><div class="desc">Buscar y solicitar</div>
+    </a>
+    <a class="app" data-port="8080" data-status="qbittorrent">
+      <span class="dot"></span><div class="icon">&#11015;&#65039;</div>
+      <div class="name">Descargas</div><div class="desc">Progreso y torrents</div>
+    </a>
+    <a class="app" data-port="8085" data-status="filebrowser">
+      <span class="dot"></span><div class="icon">&#128193;</div>
+      <div class="name">Archivos</div><div class="desc">Mover, renombrar, subir</div>
+    </a>
+  </section>
+
+  <section>
+    <h2>Almacenamiento</h2>
+    <div class="bar" id="bar"><div></div></div>
+    <div class="storage-text">
+      <span id="used">Cargando…</span>
+      <span id="free"></span>
+    </div>
+  </section>
+
+  <section class="help">
+    <h2>¿Cómo veo algo nuevo?</h2>
+    <ol>
+      <li>Abre <b>Pedir</b> y busca la película o serie.</li>
+      <li>Presiona <b>Solicitar</b>.</li>
+      <li>Se descarga y aparece sola en <b>Ver</b>. Puedes revisar el avance en <b>Descargas</b>.</li>
+    </ol>
+    <p>Si algo no funciona: desconecta el servidor 10 segundos y vuelve a conectarlo.</p>
+  </section>
+
+  <section>
+    <h2>Administración</h2>
+    <div class="admin">
+      <a data-port="7878" data-status="radarr"><span class="dot"></span>Radarr (películas)</a>
+      <a data-port="8989" data-status="sonarr"><span class="dot"></span>Sonarr (series)</a>
+      <a data-port="9696" data-status="prowlarr"><span class="dot"></span>Prowlarr (sitios)</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  const host = location.hostname;
+
+  // Links follow whatever address the browser used to reach this page.
+  document.querySelectorAll("[data-port]").forEach(a => {
+    a.href = `http://${host}:${a.dataset.port}`;
+  });
+
+  // Status dots: nginx answers 502/504 when a service is down.
+  async function checkStatus() {
+    for (const el of document.querySelectorAll("[data-status]")) {
+      const dot = el.querySelector(".dot");
+      try {
+        const r = await fetch(`/status/${el.dataset.status}`, { cache: "no-store" });
+        const up = r.status !== 502 && r.status !== 504;
+        dot.className = "dot " + (up ? "up" : "down");
+      } catch {
+        dot.className = "dot down";
+      }
+    }
+  }
+
+  const gb = b => (b / 1e9).toFixed(0) + " GB";
+
+  async function checkDisk() {
+    try {
+      const d = await (await fetch("/disk.json", { cache: "no-store" })).json();
+      const pct = Math.round(d.used / d.size * 100);
+      const bar = document.getElementById("bar");
+      bar.firstElementChild.style.width = pct + "%";
+      bar.className = "bar" + (pct >= 95 ? " full" : pct >= 85 ? " warn" : "");
+      document.getElementById("used").innerHTML = `<b>${gb(d.used)}</b> usados de ${gb(d.size)}`;
+      document.getElementById("free").textContent =
+        pct >= 95 ? `¡Casi lleno! Quedan ${gb(d.avail)}` : `Quedan ${gb(d.avail)}`;
+    } catch {
+      document.getElementById("used").textContent = "No disponible";
+    }
+  }
+
+  checkStatus(); checkDisk();
+  setInterval(checkStatus, 30000);
+  setInterval(checkDisk, 60000);
+</script>
+</body>
+</html>
