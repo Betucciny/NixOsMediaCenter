@@ -2,6 +2,14 @@
 
 Why the plan looks the way it does. Newest first.
 
+## 2026-11-22 — Runbook instead of backups for app state
+
+**Decision:** No backups of `/var/lib/*`. RUNBOOK.md records every app setting so a rebuild can redo them by hand.
+
+**Why:** App state already survives reboots, upgrades and NixOS rollbacks (rollbacks don't touch `/var/lib`). It's only lost if the disk dies or the box is reinstalled, which is rare, and redoing the setup from a checklist takes about an hour. Declaring app settings in Nix isn't worth it: qBittorrent's `serverConfig` overwrites UI changes and needs the password hash in a public repo; Jellyfin and the *arr apps keep most settings in databases.
+
+**Trade-off:** After a disk failure, watch history, users and request history are gone.
+
 ## 2026-11-22 — First install findings
 
 - **CPU is a Ryzen 5 3501U**, not the assumed 3500U. Same Vega iGPU, VAAPI works.

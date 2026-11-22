@@ -1,6 +1,6 @@
 # Home Server for Dad: Plan
 
-_A NixOS mini PC running Jellyfin and qBittorrent. Rationale lives in [DECISIONS.md](DECISIONS.md)._
+_A NixOS mini PC running Jellyfin and qBittorrent. Rationale lives in [DECISIONS.md](DECISIONS.md), procedures in [RUNBOOK.md](RUNBOOK.md)._
 
 ## 1. Goal
 
@@ -80,7 +80,7 @@ A small always-on box Dad plugs into power and ethernet, then uses from a browse
 - Auto-upgrade weekly, reboots only 04:00–05:00, stable channel.
 - Garbage collection weekly, keep 30 days.
 - Rollback: pick a previous generation at boot.
-- Back up `/var/lib/jellyfin` occasionally.
+- No backups of app state; [RUNBOOK.md](RUNBOOK.md) documents every setting to redo them.
 
 ## 9. Config repo
 
