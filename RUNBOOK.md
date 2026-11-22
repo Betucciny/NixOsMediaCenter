@@ -95,20 +95,24 @@ First visit shows the same dialog in each:
 4. Settings → Apps → + **Radarr**: Full Sync, Prowlarr server `http://127.0.0.1:9696`, Radarr server `http://127.0.0.1:7878`, API key. Same for **Sonarr** (`http://127.0.0.1:8989`).
 5. Indexers → **Sync App Indexers**. Check they appear in Radarr/Sonarr → Settings → Indexers.
 
+6. Disable **Internet Archive** (times out on every search, adds ~100 s) and any indexer that keeps hitting request limits.
+
 Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't break the links.
 
 #### Radarr — `http://<ip>:7878`
 
 - Settings → Media Management (Show Advanced): **Rename Movies** on, folder format `{Movie Title} ({Release Year})`, **Use Hardlinks** on, root folder `/srv/media/movies`.
 - Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, qBittorrent login, category `radarr`, **Remove Completed** on.
-- Settings → Profiles → HD-1080p: Language **Original**, default 1080p qualities, upgrade until Bluray-1080p.
+- Settings → Profiles → HD-1080p: Language **Original**, **untick Remux-1080p**, upgrade until Bluray-1080p. The profile is a popup with its own **Save**; reopen to confirm.
+- Settings → Quality, max size (MB/min): Bluray-1080p **60**, WEBDL/WEBRip-1080p **45**, HDTV-1080p **40** (≈ 7 / 5.5 / 5 GB for 2 h). Remuxes (20+ GB) would fill the disk.
 
 #### Sonarr — `http://<ip>:8989`
 
 - Settings → Media Management: **Rename Episodes** on (default formats), **Use Hardlinks** on, root folder `/srv/media/shows`.
 - Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, category `tv-sonarr`, **Remove Completed** on.
 - Settings → Custom Formats → + `Audio original`: condition Language → **Original**.
-- Settings → Profiles → HD-1080p: `Audio original` score **100**.
+- Settings → Profiles → HD-1080p: `Audio original` score **100**, **untick Remux-1080p**, Save.
+- Settings → Quality: same 1080p max sizes as Radarr (a 45-min episode at 45 MB/min ≈ 2 GB).
 
 Audio preference: original language, subtitles in Spanish (English fallback) via Bazarr.
 
@@ -139,6 +143,11 @@ _Rest to fill in during setup._
 ### 6. Verify
 
 Request a movie in Seerr → it downloads → appears renamed in Jellyfin → torrent removed after the seeding limit.
+
+Troubleshooting:
+- Seerr says **Requested** until the movie is in Jellyfin; it's the last thing to update. Track progress in Radarr → Activity → Queue.
+- Radarr **Missing (Monitored)** = wants it, no file yet. Movie page → Search Movie / Interactive Search (shows rejection reasons).
+- Unwanted release grabbed: Activity → Queue → X → **Remove from Client + Blocklist Release** (not from qBittorrent directly, or Radarr may grab it again).
 
 ---
 
