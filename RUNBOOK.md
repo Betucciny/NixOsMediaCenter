@@ -81,9 +81,21 @@ Check: `systemctl --failed` is empty, `http://<ip>` shows the dashboard.
   - Downloads: default save path `/srv/media/downloads`, default torrent management mode **Automatic**.
   - BitTorrent: seeding limit (ratio 2.0 or 7 days).
 
+#### Login dialog (Prowlarr, Radarr, Sonarr)
+
+First visit shows the same dialog in each:
+- Authentication method **Forms (Login Page)**, authentication required **Enabled**, own username + password.
+- **Allowed hosts:** leave empty if allowed. If it requires values: `<server ip>`, `127.0.0.1`, `localhost`, `homeserver`. The *arr apps and the dashboard talk to each other over `127.0.0.1`, so never leave that out. On a new network (Dad's), add the new server IP.
+
 #### Prowlarr — `http://<ip>:9696`
 
-_To fill in during setup._
+1. Settings → Indexers → Indexer Proxies → + **FlareSolverr**: tag `flaresolverr`, host `http://127.0.0.1:8191/`.
+2. Indexers → Add Indexer: filter Privacy **Public**, languages Spanish + English. Add 4–6, **Test** each, keep the ones that pass. Cloudflare error → add tag `flaresolverr`.
+3. Copy API keys: Radarr and Sonarr → Settings → General → API Key (set up their login first).
+4. Settings → Apps → + **Radarr**: Full Sync, Prowlarr server `http://127.0.0.1:9696`, Radarr server `http://127.0.0.1:7878`, API key. Same for **Sonarr** (`http://127.0.0.1:8989`).
+5. Indexers → **Sync App Indexers**. Check they appear in Radarr/Sonarr → Settings → Indexers.
+
+Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't break the links.
 
 #### Radarr — `http://<ip>:7878` / Sonarr — `http://<ip>:8989`
 
@@ -115,6 +127,7 @@ Request a movie in Seerr → it downloads → appears renamed in Jellyfin → to
 | Find the server's IP | Console login banner, router device list, or `ip -4 a` |
 | Remote access at Dad's | AnyDesk → his PC → `ssh betucciny@<ip>` |
 | Free space | Dashboard storage bar, or `df -h /srv/media` |
+| Server moved to a new network | Bookmark the new IP; add it to Allowed hosts in Prowlarr/Radarr/Sonarr if those are set |
 
 ### Add the second M.2
 
