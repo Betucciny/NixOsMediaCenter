@@ -122,7 +122,13 @@ Audio preference: original language, subtitles in Spanish (English fallback) via
 
 #### Seerr — `http://<ip>:5055`
 
-_To fill in during setup._
+1. Server type **Jellyfin**; sign in with Jellyfin at `127.0.0.1:8096` (no SSL, empty base) using the Jellyfin **admin** account.
+2. Sync Libraries: Películas + Series, Start Scan.
+3. Radarr: default server, `127.0.0.1:7878`, API key, profile **HD-1080p**, root `/srv/media/movies`, minimum availability **Released**, scan + automatic search on, external URL empty.
+4. Sonarr: `127.0.0.1:8989`, profile **HD-1080p**, root `/srv/media/shows`, season folders on.
+5. Settings → General: language **Español**, discover region **Mexico**, application URL empty.
+6. Settings → Users → Default Permissions: **Request** + **Auto-Approve** movies and series (otherwise every request waits for admin approval).
+7. Users → Import Jellyfin Users → Dad.
 
 #### File Browser — `http://<ip>:8085`
 
