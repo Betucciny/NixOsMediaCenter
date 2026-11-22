@@ -114,7 +114,11 @@ Audio preference: original language, subtitles in Spanish (English fallback) via
 
 #### Bazarr — `http://<ip>:6767`
 
-_To fill in during setup._
+1. Settings → General → Security: Authentication **Form**, own login.
+2. Settings → Languages: profile `Español + Inglés` (Spanish, then English). Below the table, **Default Settings**: Series and Movies on, profile `Español + Inglés`. **Save at the top.**
+3. Settings → Providers: OpenSubtitles.com (free account), Podnapisi, Subdivx.
+4. Settings → Sonarr / Radarr: enable, `127.0.0.1`, ports `8989` / `7878`, their API keys.
+5. Existing items: Movies / Series → Mass Edit → select all → profile `Español + Inglés`.
 
 #### Seerr — `http://<ip>:5055`
 
@@ -122,7 +126,9 @@ _To fill in during setup._
 
 #### File Browser — `http://<ip>:8085`
 
-_To fill in during setup._
+- First-start login: user `admin`, random password in `journalctl -u filebrowser | grep -i password`.
+
+_Rest to fill in during setup._
 
 ### 6. Verify
 
