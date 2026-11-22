@@ -2,6 +2,18 @@
 
 Why the plan looks the way it does. Newest first.
 
+## 2026-11-22 — Dashboard sends no Referer
+
+**Decision:** `<meta name="referrer" content="no-referrer">` on the dashboard.
+
+**Why:** qBittorrent's CSRF check rejects requests (401 Unauthorized) whose Referer host:port differs from its own. Links from port 80 to port 8080 triggered it. Disabling qBittorrent's CSRF protection would also work, but it's a security feature.
+
+## 2026-11-22 — Second drive: NVMe, all media moves to it
+
+**Finding:** The SATA controller implements 1 port (used by the current drive), and the spec listing says the free M.2 2280 slot is NVMe PCIe 3.0 x4, up to 4 TB. No 2.5" bay. Source: https://www.starryhope.com/minipcs/models/origimagic-c4-plus/ (only source found; Amazon listing unreadable).
+
+**Decision:** Buy a 1–2 TB NVMe and move all of `/srv/media` to it; the 256 GB SSD keeps only the OS. No drive pooling (mergerfs breaks cross-drive hardlinks unless carefully configured).
+
 ## 2026-11-22 — Original audio, Spanish subtitles; add Bazarr
 
 **Decision:** Radarr/Sonarr prefer the original-language release (Radarr profile language **Original**; Sonarr custom format `Audio original` scored 100), capped at 1080p. Bazarr downloads Spanish subtitles with English as fallback.

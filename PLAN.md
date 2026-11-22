@@ -20,9 +20,9 @@ A small always-on box Dad plugs into power and ethernet, then uses from a browse
 | Item      | Spec                                                     |
 | --------- | -------------------------------------------------------- |
 | CPU       | Ryzen 5 3501U, 8 threads, Vega iGPU (`/dev/dri/renderD128`) |
-| RAM       | 8 GB; iGPU reservation to drop from 3 GB to 512M–1G in BIOS |
+| RAM       | 8 GB (2× SO-DIMM, up to 32 GB); iGPU reservation to drop to 512M–1G |
 | Storage   | 256 GB SATA M.2 (slot 1)                                 |
-| Expansion | Second M.2 slot, empty                                   |
+| Expansion | Second M.2 2280 slot: NVMe PCIe 3.0 x4, up to 4 TB (empty) |
 | Network   | 2× ethernet (target), Wi-Fi in use during setup          |
 
 ## 4. Software stack
@@ -169,11 +169,10 @@ modules/
 ## 13. Open questions
 
 1. Which router hands out IPs at Dad's, and can we set a DHCP reservation on it (or use a static IP)?
-2. Second M.2 slot: NVMe or SATA?
-3. Which devices will he watch on?
-4. VPN for downloads?
-5. Samba in phase 1 or 2?
-6. Is a router near where the box will sit?
+2. Which devices will he watch on?
+3. VPN for downloads?
+4. Samba in phase 1 or 2?
+5. Is a router near where the box will sit?
 
 ## 14. Next steps
 

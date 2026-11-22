@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- qBittorrent rejects requests whose Referer port differs from its own (CSRF check). -->
+  <meta name="referrer" content="no-referrer">
   <title>Servidor de Casa</title>
   <style>
     :root { color-scheme: light dark; --bg: #f4f4f5; --card: #fff; --fg: #18181b; --muted: #71717a;

@@ -167,8 +167,10 @@ Troubleshooting:
 
 ### Add the second M.2
 
+Buy: **M.2 2280 NVMe** (the free slot is NVMe-only, PCIe 3.0 x4, up to 4 TB). Bigger than 256 GB, since all media moves to it.
+
 ```bash
-lsblk                                   # find the new disk, e.g. /dev/sdb or /dev/nvme0n1
+lsblk                                   # the new disk shows as /dev/nvme0n1
 sudo mkfs.ext4 -L media /dev/<disk>
 sudo mount /dev/disk/by-label/media /mnt
 sudo systemctl stop jellyfin qbittorrent radarr sonarr filebrowser
