@@ -27,7 +27,7 @@ in
         };
       }
       // status "jellyfin" 8096
-      // status "jellyseerr" 5055
+      // status "seerr" 5055
       // status "qbittorrent" 8080
       // status "filebrowser" 8085
       // status "radarr" 7878

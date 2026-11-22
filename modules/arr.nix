@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 {
   # Automation: request -> search -> download -> rename + hardlink into the library.
@@ -26,12 +26,12 @@
     enable = true;
   };
 
-  services.jellyseerr = {    # request page for Dad, port 5055
+  services.seerr = {         # request page for Dad (formerly Jellyseerr), port 5055
     enable = true;
     openFirewall = true;
   };
 
   # Files created by Radarr/Sonarr stay group-writable for the media group.
-  systemd.services.radarr.serviceConfig.UMask = "0002";
-  systemd.services.sonarr.serviceConfig.UMask = "0002";
+  systemd.services.radarr.serviceConfig.UMask = lib.mkForce "0002";
+  systemd.services.sonarr.serviceConfig.UMask = lib.mkForce "0002";
 }

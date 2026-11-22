@@ -17,13 +17,13 @@ A small always-on box Dad plugs into power and ethernet, then uses from a browse
 
 ## 3. Hardware
 
-| Item      | Spec                       |
-| --------- | -------------------------- |
-| CPU       | Ryzen 5 3500U (to confirm) |
-| RAM       | 8 GB                       |
-| Storage   | 256 GB M.2 (slot 1)        |
-| Expansion | Second M.2 slot, empty     |
-| Network   | Ethernet                   |
+| Item      | Spec                                                     |
+| --------- | -------------------------------------------------------- |
+| CPU       | Ryzen 5 3501U, 8 threads, Vega iGPU (`/dev/dri/renderD128`) |
+| RAM       | 8 GB; iGPU reservation to drop from 3 GB to 512M–1G in BIOS |
+| Storage   | 256 GB SATA M.2 (slot 1)                                 |
+| Expansion | Second M.2 slot, empty                                   |
+| Network   | 2× ethernet (target), Wi-Fi in use during setup          |
 
 ## 4. Software stack
 
@@ -31,7 +31,7 @@ A small always-on box Dad plugs into power and ethernet, then uses from a browse
 | ------------ | ---------------------------------------------------- | ---- | ---------------- |
 | Dashboard    | Spanish landing page, status dots, storage bar       | 80   | n/a              |
 | Jellyfin     | Watch (VAAPI transcoding)                            | 8096 | Ver              |
-| Jellyseerr   | Search and request movies/shows                      | 5055 | Pedir            |
+| Seerr   | Search and request movies/shows                      | 5055 | Pedir            |
 | qBittorrent  | Download progress, manual torrents                   | 8080 | Descargas        |
 | File Browser | Move, rename, upload files in `/srv/media`           | 8085 | Archivos         |
 | Radarr       | Movies: find, import, rename, clean up               | 7878 | Admin            |
@@ -71,7 +71,7 @@ A small always-on box Dad plugs into power and ethernet, then uses from a browse
 - SSH key-only, no password login, no root login.
 - Strong unique passwords for every web UI (Jellyfin, qBittorrent, Radarr, Sonarr, Prowlarr, File Browser), in my password manager.
 - Jellyfin: no open registration, no passwordless users.
-- Dad uses a non-admin Jellyfin user (also his Jellyseerr login); I keep admin.
+- Dad uses a non-admin Jellyfin user (also his Seerr login); I keep admin.
 - AnyDesk on Dad's PC behind a strong password.
 - Nothing exposed to the internet.
 
@@ -98,7 +98,7 @@ modules/
   storage.nix           # /srv/media folders, second-drive mount (commented)
   jellyfin.nix          # Jellyfin + VAAPI
   qbittorrent.nix       # qBittorrent web UI
-  arr.nix               # Radarr, Sonarr, Prowlarr, FlareSolverr, Jellyseerr
+  arr.nix               # Radarr, Sonarr, Prowlarr, FlareSolverr, Seerr
   filebrowser.nix       # File Browser over /srv/media
   dashboard.nix         # nginx: page, status checks, disk usage timer
   dashboard/index.html  # Spanish page; links follow the current IP
@@ -120,7 +120,7 @@ modules/
 
 **Phase 1: Core, at my place**
 
-1. BIOS: power on after AC loss, Secure Boot off, UEFI boot.
+1. BIOS: power on after AC loss, Secure Boot off, UEFI boot, UMA frame buffer 512M–1G.
 2. Flash the NixOS ISO and install with no desktop.
 3. Enable SSH and confirm I can connect.
 4. Apply the config from the repo.
@@ -128,7 +128,7 @@ modules/
 6. qBittorrent: password, default save path `/srv/media/downloads`, automatic torrent management, Spanish UI.
 7. Prowlarr: add torrent sites, FlareSolverr if needed, connect to Radarr and Sonarr.
 8. Radarr/Sonarr: root folders, qBittorrent as download client, naming rules, seeding limit + remove completed.
-9. Jellyseerr: connect to Jellyfin, Radarr, Sonarr; Spanish.
+9. Seerr: connect to Jellyfin, Radarr, Sonarr; Spanish.
 10. File Browser: admin password, Dad's user.
 11. End-to-end test: request a movie and a show, confirm they land renamed in Jellyfin and the torrent is removed after seeding.
 

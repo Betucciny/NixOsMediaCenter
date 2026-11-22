@@ -2,9 +2,18 @@
 
 Why the plan looks the way it does. Newest first.
 
-## 2026-11-22 — Radarr/Sonarr/Prowlarr/Jellyseerr in phase 1
+## 2026-11-22 — First install findings
 
-**Decision:** Full automation from day one. Dad requests in Jellyseerr; Radarr/Sonarr find, download, rename and hardlink into the library, then remove the torrent after seeding.
+- **CPU is a Ryzen 5 3501U**, not the assumed 3500U. Same Vega iGPU, VAAPI works.
+- **The iGPU reserves 3 GB of the 8 GB RAM** (BIOS UMA frame buffer), leaving 4.7 GB. Jellyfin's transcoding needs little dedicated VRAM, so the plan is to drop it to 512M–1G.
+- **The M.2 drive is SATA**, not NVMe.
+- **`services.jellyseerr` is now `services.seerr`** in NixOS 26.05 (Seerr and Overseerr merged into Seerr).
+- **Modules for File Browser, qBittorrent, Radarr and Sonarr set their own `UMask`**, so ours uses `lib.mkForce "0002"` to keep files group-writable for the `media` group.
+- **First switch is done from a local copy** (`path:` flake on the server) because the repo isn't on GitHub yet.
+
+## 2026-11-22 — Radarr/Sonarr/Prowlarr/Seerr in phase 1
+
+**Decision:** Full automation from day one. Dad requests in Seerr; Radarr/Sonarr find, download, rename and hardlink into the library, then remove the torrent after seeding.
 
 **Why:** On my girlfriend's OpenMediaVault + compose setup, the biggest pain is the manual step after a download: remove the torrent, rename files, move them into the Jellyfin folders, from a terminal. Dad shouldn't do that. Native NixOS services sharing one `media` group and one `/srv/media` filesystem avoid the container path-mapping problems and make hardlinks work.
 

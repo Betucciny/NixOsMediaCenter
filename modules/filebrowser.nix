@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 {
   # Web file manager over /srv/media for manual fixes and uploads, port 8085.
@@ -13,5 +13,5 @@
     };
   };
 
-  systemd.services.filebrowser.serviceConfig.UMask = "0002";
+  systemd.services.filebrowser.serviceConfig.UMask = lib.mkForce "0002";
 }

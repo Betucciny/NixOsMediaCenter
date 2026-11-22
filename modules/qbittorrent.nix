@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 {
   # Password and default save path (/srv/media/downloads) are set in the web UI.
@@ -11,5 +11,5 @@
   };
 
   # Downloads stay group-writable so other media users can move or rename them.
-  systemd.services.qbittorrent.serviceConfig.UMask = "0002";
+  systemd.services.qbittorrent.serviceConfig.UMask = lib.mkForce "0002";
 }
