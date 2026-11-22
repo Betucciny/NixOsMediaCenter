@@ -2,6 +2,12 @@
 
 Why the plan looks the way it does. Newest first.
 
+## 2026-11-22 — Original audio, Spanish subtitles; add Bazarr
+
+**Decision:** Radarr/Sonarr prefer the original-language release (Radarr profile language **Original**; Sonarr custom format `Audio original` scored 100), capped at 1080p. Bazarr downloads Spanish subtitles with English as fallback.
+
+**Why:** Dad prefers original audio with Spanish or English subtitles. Releases often lack Spanish subs, so relying on what's embedded isn't enough. 1080p cap because 4K files (20–60 GB) would fill 256 GB quickly.
+
 ## 2026-11-22 — Runbook instead of backups for app state
 
 **Decision:** No backups of `/var/lib/*`. RUNBOOK.md records every app setting so a rebuild can redo them by hand.

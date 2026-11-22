@@ -71,7 +71,7 @@ Check: `systemctl --failed` is empty, `http://<ip>` shows the dashboard.
 
   In each: metadata language **Spanish**, country **Mexico**, real-time monitoring **on**, trickplay extraction **off**, chapter images off, prefer embedded titles off. Movies: automatically add to collection **on**. Rest default.
 - Dashboard → Playback → Transcoding: **VAAPI**, device `/dev/dri/renderD128`, hardware decoding **H264, HEVC, VC1, VP9** (no AV1).
-- Users → add Dad, **not admin** (also his Seerr login).
+- Users → add Dad, **not admin** (also his Seerr login). His Settings → Playback → Subtitles: preferred language **Spanish**, mode **Always**.
 
 #### qBittorrent — `http://<ip>:8080`
 
@@ -79,7 +79,7 @@ Check: `systemctl --failed` is empty, `http://<ip>` shows the dashboard.
 - Tools → Options:
   - WebUI: own username + password, language Español.
   - Downloads: default save path `/srv/media/downloads`, default torrent management mode **Automatic**.
-  - BitTorrent: seeding limit (ratio 2.0 or 7 days).
+  - BitTorrent: seeding limit (ratio 2.0 or 7 days), action when reached **Stop torrent** (not Remove: Radarr/Sonarr remove it themselves).
 
 #### Login dialog (Prowlarr, Radarr, Sonarr)
 
@@ -97,7 +97,22 @@ First visit shows the same dialog in each:
 
 Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't break the links.
 
-#### Radarr — `http://<ip>:7878` / Sonarr — `http://<ip>:8989`
+#### Radarr — `http://<ip>:7878`
+
+- Settings → Media Management (Show Advanced): **Rename Movies** on, folder format `{Movie Title} ({Release Year})`, **Use Hardlinks** on, root folder `/srv/media/movies`.
+- Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, qBittorrent login, category `radarr`, **Remove Completed** on.
+- Settings → Profiles → HD-1080p: Language **Original**, default 1080p qualities, upgrade until Bluray-1080p.
+
+#### Sonarr — `http://<ip>:8989`
+
+- Settings → Media Management: **Rename Episodes** on (default formats), **Use Hardlinks** on, root folder `/srv/media/shows`.
+- Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, category `tv-sonarr`, **Remove Completed** on.
+- Settings → Custom Formats → + `Audio original`: condition Language → **Original**.
+- Settings → Profiles → HD-1080p: `Audio original` score **100**.
+
+Audio preference: original language, subtitles in Spanish (English fallback) via Bazarr.
+
+#### Bazarr — `http://<ip>:6767`
 
 _To fill in during setup._
 

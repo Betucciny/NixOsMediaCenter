@@ -37,10 +37,11 @@ A small always-on box Dad plugs into power and ethernet, then uses from a browse
 | Radarr       | Movies: find, import, rename, clean up               | 7878 | Admin            |
 | Sonarr       | Shows: find, import, rename, clean up                | 8989 | Admin            |
 | Prowlarr     | Torrent site manager for Radarr/Sonarr               | 9696 | Admin            |
+| Bazarr       | Subtitles: Spanish, English fallback                 | 6767 | Admin            |
 | FlareSolverr | Cloudflare helper for Prowlarr                       | 8191 (localhost) | n/a  |
 | OpenSSH      | Admin, key-only                                      | 22   | n/a              |
 
-**Download flow:** Pedir → Radarr/Sonarr pick a torrent via Prowlarr → qBittorrent downloads to `/srv/media/downloads` → on completion, hardlinked and renamed into `movies/` or `shows/` → Jellyfin picks it up → torrent and download copy removed after the seeding limit.
+**Download flow:** Pedir → Radarr/Sonarr pick a torrent via Prowlarr → qBittorrent downloads to `/srv/media/downloads` → on completion, hardlinked and renamed into `movies/` or `shows/` → Bazarr adds Spanish subtitles → Jellyfin picks it up → torrent and download copy removed after the seeding limit.
 
 ## 5. Storage
 
@@ -98,7 +99,7 @@ modules/
   storage.nix           # /srv/media folders, second-drive mount (commented)
   jellyfin.nix          # Jellyfin + VAAPI
   qbittorrent.nix       # qBittorrent web UI
-  arr.nix               # Radarr, Sonarr, Prowlarr, FlareSolverr, Seerr
+  arr.nix               # Radarr, Sonarr, Prowlarr, Bazarr, FlareSolverr, Seerr
   filebrowser.nix       # File Browser over /srv/media
   dashboard.nix         # nginx: page, status checks, disk usage timer
   dashboard/index.html  # Spanish page; links follow the current IP
@@ -167,19 +168,23 @@ modules/
 
 ## 13. Open questions
 
-1. Which router hands out IPs, and can we set a DHCP reservation on it (or use a static IP)?
-2. Exact CPU, and second M.2 slot NVMe or SATA?
+1. Which router hands out IPs at Dad's, and can we set a DHCP reservation on it (or use a static IP)?
+2. Second M.2 slot: NVMe or SATA?
 3. Which devices will he watch on?
-4. Magnet links by hand, or Sonarr/Radarr?
-5. VPN for downloads?
-6. Samba in phase 1 or 2?
-7. Is a router near where the box will sit?
+4. VPN for downloads?
+5. Samba in phase 1 or 2?
+6. Is a router near where the box will sit?
 
 ## 14. Next steps
 
 - [x] Get the mini PC ready
+- [x] Flash the NixOS ISO
+- [x] Install and confirm SSH access
+- [x] Apply the phase 1 config
+- [x] Jellyfin, qBittorrent, Prowlarr, Radarr, Sonarr setup
+- [ ] Bazarr, Seerr, File Browser setup
+- [ ] End-to-end test
+- [ ] BIOS: UMA frame buffer 512M–1G
+- [ ] Push repo to GitHub (public)
 - [ ] Answer the open questions
-- [ ] Flash the NixOS ISO
-- [ ] Install and confirm SSH access
-- [ ] Apply the phase 1 config
 - [ ] Burn-in and handoff prep

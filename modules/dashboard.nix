@@ -32,7 +32,8 @@ in
       // status "filebrowser" 8085
       // status "radarr" 7878
       // status "sonarr" 8989
-      // status "prowlarr" 9696;
+      // status "prowlarr" 9696
+      // status "bazarr" 6767;
     };
   };
 

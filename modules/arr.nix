@@ -22,6 +22,12 @@
     openFirewall = true;
   };
 
+  services.bazarr = {        # subtitles (Spanish, English fallback), port 6767
+    enable = true;
+    group = "media";
+    openFirewall = true;
+  };
+
   services.flaresolverr = {  # Cloudflare helper for Prowlarr, localhost:8191
     enable = true;
   };
@@ -34,4 +40,5 @@
   # Files created by Radarr/Sonarr stay group-writable for the media group.
   systemd.services.radarr.serviceConfig.UMask = lib.mkForce "0002";
   systemd.services.sonarr.serviceConfig.UMask = lib.mkForce "0002";
+  systemd.services.bazarr.serviceConfig.UMask = lib.mkForce "0002";
 }
