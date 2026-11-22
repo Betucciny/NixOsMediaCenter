@@ -138,9 +138,9 @@ Audio preference: original language, subtitles in Spanish (English fallback) via
 
 #### File Browser — `http://<ip>:8085`
 
-- First-start login: user `admin`, random password in `journalctl -u filebrowser | grep -i password`.
-
-_Rest to fill in during setup._
+- First-start login: user `admin`, random password in `journalctl -u filebrowser | grep -i password`. Change it in Settings → Profile.
+- Settings → Global Settings: signup **off**, no commands.
+- Settings → User Management → New: Dad, same password as his Jellyfin, language Español, scope `/`, permissions Create / Rename / Modify / Delete / Download (no Admin, Execute, Share).
 
 ### 6. Verify
 

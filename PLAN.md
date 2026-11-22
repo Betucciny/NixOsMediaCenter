@@ -181,9 +181,10 @@ modules/
 - [x] Install and confirm SSH access
 - [x] Apply the phase 1 config
 - [x] Jellyfin, qBittorrent, Prowlarr, Radarr, Sonarr setup
-- [ ] Bazarr, Seerr, File Browser setup
+- [x] Bazarr, Seerr, File Browser setup
+- [x] Radarr/Sonarr → Jellyfin refresh on import
 - [ ] End-to-end test
 - [ ] BIOS: UMA frame buffer 512M–1G
 - [x] Push repo to GitHub (public)
-- [ ] Answer the open questions
+- [x] Answer the open questions
 - [ ] Burn-in and handoff prep
