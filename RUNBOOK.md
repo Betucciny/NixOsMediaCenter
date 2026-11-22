@@ -150,6 +150,7 @@ Troubleshooting:
 - Seerr says **Requested** until the movie is in Jellyfin; it's the last thing to update. Track progress in Radarr → Activity → Queue.
 - Radarr **Missing (Monitored)** = wants it, no file yet. Movie page → Search Movie / Interactive Search (shows rejection reasons).
 - Imported but not in Jellyfin: check Radarr/Sonarr → Settings → Connect → Jellyfin exists; one-off fix: Jellyfin → Dashboard → Libraries → Scan All Libraries.
+- Deleted from the library but free space didn't change: the file is a hardlink and the torrent is still seeding from `downloads/`. Space returns when Radarr/Sonarr remove the torrent after the seeding limit (or remove it from Activity → Queue now).
 - Unwanted release grabbed: Activity → Queue → X → **Remove from Client + Blocklist Release** (not from qBittorrent directly, or Radarr may grab it again).
 
 ---
