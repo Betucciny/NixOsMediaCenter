@@ -184,6 +184,6 @@ modules/
 - [ ] Bazarr, Seerr, File Browser setup
 - [ ] End-to-end test
 - [ ] BIOS: UMA frame buffer 512M–1G
-- [ ] Push repo to GitHub (public)
+- [x] Push repo to GitHub (public)
 - [ ] Answer the open questions
 - [ ] Burn-in and handoff prep
