@@ -2,6 +2,18 @@
 
 Why the plan looks the way it does. Newest first.
 
+## 2026-11-22 — Radarr/Sonarr notify Jellyfin on import
+
+**Decision:** Radarr and Sonarr each get a Jellyfin connection (Settings → Connect) that refreshes the library on import.
+
+**Why:** Jellyfin's real-time monitoring missed the first imported episodes (new `Show/Season N/` folders). A push on import is reliable and means nobody scans manually.
+
+## 2026-11-22 — External or second drive: no DIY bay; guard the mount
+
+**Decision:** For more space use the NVMe slot or a USB HDD/DAS, not a printed bay with an M.2-to-SATA adapter. When media moves to its own drive, media services get `RequiresMountsFor=/srv/media`.
+
+**Why:** The board has no SATA power, so a DIY bay needs an external PSU, loose cabling and a custom enclosure: fragile for a box maintained remotely. USB 3 is far faster than streaming needs. Without the mount guard, a missing drive leaves an empty `/srv/media` on the OS disk and downloads would fill the 256 GB SSD.
+
 ## 2026-11-22 — Dashboard sends no Referer
 
 **Decision:** `<meta name="referrer" content="no-referrer">` on the dashboard.

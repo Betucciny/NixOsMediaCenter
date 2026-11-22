@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 {
   # Everything media-related lives under /srv/media, owned by the media group.
@@ -10,11 +10,17 @@
     "d /srv/media/downloads 2775 root media - -"
   ];
 
-  # Second M.2: format it as ext4 with label "media", copy existing files over,
-  # then uncomment this block.
+  # Second drive: format it as ext4 with label "media", copy existing files over,
+  # then uncomment both blocks (see RUNBOOK.md, "Add the second M.2").
   # fileSystems."/srv/media" = {
   #   device = "/dev/disk/by-label/media";
   #   fsType = "ext4";
   #   options = [ "nofail" ];
   # };
+  #
+  # If the drive fails to mount, /srv/media is an empty folder on the OS disk:
+  # don't let anything download into it and fill the 256 GB SSD.
+  # systemd.services = lib.genAttrs
+  #   [ "jellyfin" "qbittorrent" "radarr" "sonarr" "bazarr" "filebrowser" ]
+  #   (_: { unitConfig.RequiresMountsFor = [ "/srv/media" ]; });
 }

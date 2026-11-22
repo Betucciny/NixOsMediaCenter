@@ -103,6 +103,7 @@ Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't 
 
 - Settings → Media Management (Show Advanced): **Rename Movies** on, folder format `{Movie Title} ({Release Year})`, **Use Hardlinks** on, root folder `/srv/media/movies`.
 - Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, qBittorrent login, category `radarr`, **Remove Completed** on.
+- Settings → Connect → + **Emby / Jellyfin**: triggers On Import + On Upgrade (+ Rename/Delete), `127.0.0.1:8096`, Jellyfin API key (Jellyfin → Dashboard → API Keys), **Update Library** on. Without it, new files may not appear until a manual scan.
 - Settings → Profiles → HD-1080p: Language **Original**, **untick Remux-1080p**, upgrade until Bluray-1080p. The profile is a popup with its own **Save**; reopen to confirm.
 - Settings → Quality, max size (MB/min): Bluray-1080p **60**, WEBDL/WEBRip-1080p **45**, HDTV-1080p **40** (≈ 7 / 5.5 / 5 GB for 2 h). Remuxes (20+ GB) would fill the disk.
 
@@ -110,6 +111,7 @@ Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't 
 
 - Settings → Media Management: **Rename Episodes** on (default formats), **Use Hardlinks** on, root folder `/srv/media/shows`.
 - Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, category `tv-sonarr`, **Remove Completed** on.
+- Settings → Connect → + **Emby / Jellyfin**: same as Radarr.
 - Settings → Custom Formats → + `Audio original`: condition Language → **Original**.
 - Settings → Profiles → HD-1080p: `Audio original` score **100**, **untick Remux-1080p**, Save.
 - Settings → Quality: same 1080p max sizes as Radarr (a 45-min episode at 45 MB/min ≈ 2 GB).
@@ -147,6 +149,7 @@ Request a movie in Seerr → it downloads → appears renamed in Jellyfin → to
 Troubleshooting:
 - Seerr says **Requested** until the movie is in Jellyfin; it's the last thing to update. Track progress in Radarr → Activity → Queue.
 - Radarr **Missing (Monitored)** = wants it, no file yet. Movie page → Search Movie / Interactive Search (shows rejection reasons).
+- Imported but not in Jellyfin: check Radarr/Sonarr → Settings → Connect → Jellyfin exists; one-off fix: Jellyfin → Dashboard → Libraries → Scan All Libraries.
 - Unwanted release grabbed: Activity → Queue → X → **Remove from Client + Blocklist Release** (not from qBittorrent directly, or Radarr may grab it again).
 
 ---
@@ -167,7 +170,7 @@ Troubleshooting:
 
 ### Add the second M.2
 
-Buy: **M.2 2280 NVMe** (the free slot is NVMe-only, PCIe 3.0 x4, up to 4 TB). Bigger than 256 GB, since all media moves to it.
+Buy: **M.2 2280 NVMe** (the free slot is NVMe-only, PCIe 3.0 x4, up to 4 TB), or an external **USB HDD** for more TB per peso (shows as `/dev/sdb`). Bigger than 256 GB, since all media moves to it.
 
 ```bash
 lsblk                                   # the new disk shows as /dev/nvme0n1
@@ -177,4 +180,4 @@ sudo systemctl stop jellyfin qbittorrent radarr sonarr filebrowser
 sudo rsync -aH /srv/media/ /mnt/        # -H keeps hardlinks
 sudo umount /mnt
 ```
-Uncomment the `fileSystems."/srv/media"` block in `modules/storage.nix`, deploy, reboot. Check `df -h /srv/media` shows the new disk, then delete the old copy from the root disk (mount `/dev/sda2` elsewhere to reach the hidden folder).
+Uncomment **both** blocks in `modules/storage.nix`: the `fileSystems."/srv/media"` mount, and `RequiresMountsFor` (stops the media services from starting if the drive isn't mounted, so nothing downloads onto the OS disk). Deploy, reboot. Check `df -h /srv/media` shows the new disk, then delete the old copy from the root disk (mount `/dev/sda2` elsewhere to reach the hidden folder).
