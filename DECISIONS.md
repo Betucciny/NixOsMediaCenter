@@ -6,7 +6,9 @@ Why the plan looks the way it does. Newest first.
 
 **Decision:** Radarr and Sonarr each get a Jellyfin connection (Settings → Connect) that refreshes the library on import.
 
-**Why:** Jellyfin's real-time monitoring missed the first imported episodes (new `Show/Season N/` folders). A push on import is reliable and means nobody scans manually.
+**Why:** A push on import means nobody scans manually.
+
+**Finding (same day):** The push reached Jellyfin (`POST /Library/Media/Updated` → 204) but nothing refreshed. Real-time monitoring was enabled on both libraries, but Jellyfin skips watching library folders that are empty at startup ("inaccessible or empty, skipping"), and Sonarr/Radarr's push goes through that same watcher. One manual scan after the first content arrived started the watchers ("Watching directory"); from then on imports refreshed within a minute. Only matters on a fresh setup with empty libraries, so it's a runbook step, not a config change.
 
 ## 2026-11-22 — External or second drive: no DIY bay; guard the mount
 

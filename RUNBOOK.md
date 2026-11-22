@@ -71,6 +71,7 @@ Check: `systemctl --failed` is empty, `http://<ip>` shows the dashboard.
 
   In each: metadata language **Spanish**, country **Mexico**, real-time monitoring **on**, trickplay extraction **off**, chapter images off, prefer embedded titles off. Movies: automatically add to collection **on**. Rest default.
 - Dashboard → Playback → Transcoding: **VAAPI**, device `/dev/dri/renderD128`, hardware decoding **H264, HEVC, VC1, VP9** (no AV1).
+- **After the first movie/episode lands in the library: Dashboard → Libraries → Scan All Libraries once.** Jellyfin doesn't watch library folders that were empty when it started, so until that first scan, real-time monitoring and the Radarr/Sonarr refresh do nothing. Check: `journalctl -u jellyfin | grep "Watching directory"` lists both folders.
 - Users → add Dad, **not admin** (also his Seerr login). His Settings → Playback → Subtitles: preferred language **Spanish**, mode **Always**.
 
 #### qBittorrent — `http://<ip>:8080`
@@ -149,7 +150,7 @@ Request a movie in Seerr → it downloads → appears renamed in Jellyfin → to
 Troubleshooting:
 - Seerr says **Requested** until the movie is in Jellyfin; it's the last thing to update. Track progress in Radarr → Activity → Queue.
 - Radarr **Missing (Monitored)** = wants it, no file yet. Movie page → Search Movie / Interactive Search (shows rejection reasons).
-- Imported but not in Jellyfin: check Radarr/Sonarr → Settings → Connect → Jellyfin exists; one-off fix: Jellyfin → Dashboard → Libraries → Scan All Libraries.
+- Imported but not in Jellyfin: `journalctl -u jellyfin | grep "Watching directory"`. No lines since the last start = Jellyfin isn't watching (folders were empty at startup): Scan All Libraries once. Otherwise check Radarr/Sonarr → Settings → Connect → Jellyfin.
 - Deleted from the library but free space didn't change: the file is a hardlink and the torrent is still seeding from `downloads/`. Space returns when Radarr/Sonarr remove the torrent after the seeding limit (or remove it from Activity → Queue now).
 - Unwanted release grabbed: Activity → Queue → X → **Remove from Client + Blocklist Release** (not from qBittorrent directly, or Radarr may grab it again).
 
