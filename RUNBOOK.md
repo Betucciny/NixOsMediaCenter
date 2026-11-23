@@ -102,7 +102,7 @@ Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't 
 
 #### Radarr — `http://<ip>:7878`
 
-- Settings → Media Management (Show Advanced): **Rename Movies** on, folder format `{Movie Title} ({Release Year})`, **Use Hardlinks** on, root folder `/srv/media/movies`.
+- Settings → Media Management (Show Advanced): **Rename Movies** on, folder format `{Movie Title} ({Release Year})`, **Use Hardlinks** on, **Import Extra Files** on with `srt,ass`, **Unmonitor Deleted Movies** on (a file deleted from Jellyfin/File Browser isn't re-downloaded), root folder `/srv/media/movies`.
 - Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, qBittorrent login, category `radarr`, **Remove Completed** on.
 - Settings → Connect → + **Emby / Jellyfin**: triggers On Import + On Upgrade (+ Rename/Delete), `127.0.0.1:8096`, Jellyfin API key (Jellyfin → Dashboard → API Keys), **Update Library** on. Without it, new files may not appear until a manual scan.
 - Settings → Profiles → HD-1080p: Language **Original**, **untick Remux-1080p**, upgrade until Bluray-1080p. The profile is a popup with its own **Save**; reopen to confirm.
@@ -110,7 +110,7 @@ Always use `127.0.0.1` between apps, never the LAN IP, so a new network doesn't 
 
 #### Sonarr — `http://<ip>:8989`
 
-- Settings → Media Management: **Rename Episodes** on (default formats), **Use Hardlinks** on, root folder `/srv/media/shows`.
+- Settings → Media Management (Show Advanced): **Rename Episodes** on (default formats), **Use Hardlinks** on, **Import Extra Files** on with `srt,ass`, **Unmonitor Deleted Episodes** on, root folder `/srv/media/shows`.
 - Settings → Download Clients → + qBittorrent: `127.0.0.1:8080`, category `tv-sonarr`, **Remove Completed** on.
 - Settings → Connect → + **Emby / Jellyfin**: same as Radarr.
 - Settings → Custom Formats → + `Audio original`: condition Language → **Original**.
@@ -123,7 +123,8 @@ Audio preference: original language, subtitles in Spanish (English fallback) via
 
 1. Settings → General → Security: Authentication **Form**, own login.
 2. Settings → Languages: profile `Español + Inglés` (Spanish, then English). Below the table, **Default Settings**: Series and Movies on, profile `Español + Inglés`. **Save at the top.**
-3. Settings → Providers: OpenSubtitles.com (free account), Podnapisi, Subdivx.
+3. Settings → Providers: OpenSubtitles.com (free account, **activated** from its email; log in with the **username, not the email**), Podnapisi, Subdivx. Save each provider's popup, then **Save** at the top.
+   - A failed login throttles the provider for 12 h: System → Providers → **Reset**, then Movies/Series → **Search All**.
 4. Settings → Sonarr / Radarr: enable, `127.0.0.1`, ports `8989` / `7878`, their API keys.
 5. Existing items: Movies / Series → Mass Edit → select all → profile `Español + Inglés`.
 
@@ -169,6 +170,19 @@ Troubleshooting:
 | Remote access at Dad's | AnyDesk → his PC → `ssh betucciny@<ip>` |
 | Free space | Dashboard storage bar, or `df -h /srv/media` |
 | Server moved to a new network | Bookmark the new IP; add it to Allowed hosts in Prowlarr/Radarr/Sonarr if those are set |
+
+### Delete something
+
+Delete in **Radarr/Sonarr**: a monitored item whose file disappears gets downloaded again.
+
+| Want gone | Where | Notes |
+| --- | --- | --- |
+| Movie / show, for good | Radarr / Sonarr → Delete, tick **Delete Movie/Series Folder** | Still seeding? Also delete the torrent **with files** in qBittorrent |
+| Some episodes / a season | Sonarr: **unmonitor first**, then delete the files | Other order = re-download in between |
+| Dad deleting something | Jellyfin or File Browser | Safe because "Unmonitor Deleted" is on |
+| Request it again later | Seerr → item → Manage → **Clear Data** | Otherwise Seerr thinks it's still there |
+
+**Torrents:** already in Jellyfin → deleting the torrent with files in qBittorrent is fine (the library copy is a separate hardlink). Not imported yet → remove it from Radarr/Sonarr → Activity → Queue instead, or they'll grab it again.
 
 ### Add the second M.2
 
